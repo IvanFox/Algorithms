@@ -4,7 +4,9 @@ import java.util.List;
 
 public class MergeSort {
 
-    public static <T extends Comparable<T>> List<T> merge(List<T> first, List<T> second, List<T> accumulator) {
+    private static final int FIRST_ELEMENT = 0;
+
+    private static <T extends Comparable<T>> List<T> merge(List<T> first, List<T> second, List<T> accumulator) {
         if (first.isEmpty()) {
             accumulator.addAll(second);
         }
@@ -12,32 +14,35 @@ public class MergeSort {
             accumulator.addAll(first);
         }
         else {
-            if (first.get(0).compareTo(second.get(0)) <= 0) {
-                accumulator.add(first.get(0));
-                return merge(first.subList(1, first.size()), second, accumulator);
+            if (first.get(FIRST_ELEMENT).compareTo(second.get(FIRST_ELEMENT)) <= 0) {
+                accumulator.add(first.get(FIRST_ELEMENT));
+                return merge(first.subList(FIRST_ELEMENT + 1, first.size()), second, accumulator);
             }
             else {
-                accumulator.add(second.get(0));
-                return merge(first, second.subList(1, second.size()), accumulator);
+                accumulator.add(second.get(FIRST_ELEMENT));
+                return merge(first, second.subList(FIRST_ELEMENT + 1, second.size()), accumulator);
             }
         }
         return accumulator;
     }
 
-    public static <T extends Comparable<T>> List<T> mergeSort(List<T> list) {
+    public static <T extends Comparable<T>> List<T> sort(List<T> list) {
 
         int mid = list.size()/2;
         if (mid == 0) {
             return list;
         }
         return merge(
-            mergeSort(list.subList(0, mid)),
-            mergeSort(list.subList(mid, list.size())),
+            sort(list.subList(0, mid)),
+            sort(list.subList(mid, list.size())),
             new ArrayList<>()
         );
     }
 
+
+    private MergeSort() {}
+
     public static void main(String[] args) {
-        mergeSort(Arrays.asList(4, 1, 3, 2)).forEach(System.out::println);
+        sort(Arrays.asList(4, 1, 3, 2, 5)).forEach(System.out::println);
     }
 }
